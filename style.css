@@ -721,22 +721,57 @@
   #game-screen.active { background: #1e1810 !important; }
 /* --- Gemini 的意境加固模块 --- */
 
-/* 1. 让叙述文字更有“渗墨”感（渐显效果） */
-.narration {
-  animation: inkSpread 1.5s ease-out;
+/* 1. 通用文字：干脆利落，只做简单的渐显（方案二的丝滑感） */
+.narration, .dialogue {
+  animation: simpleFadeIn 0.4s ease-out both;
 }
 
-@keyframes inkSpread {
+@keyframes simpleFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 2. 只有“内心独白”保留水墨晕开效果（方案一的意境感） */
+/* 这样当苏鸢内心独白出现时，那种模糊感会增加“虚幻”和“挣扎”的味道 */
+.inner-thought {
+  animation: inkFadeIn 0.7s ease-out both; /* 稍微慢一点点，突出情绪 */
+}
+
+/* 3. 每一幕的大标题（保留水墨感，因为进场后加载压力小了） */
+.chapter-title {
+  animation: heavyInkFade 0.8s ease-out both;
+}
+
+/* --- 首页大标题：优雅入场方案 --- */
+.main-title {
+  /* 1. 先让它完全透明，防止它用丑字体“抢跑” */
+  opacity: 0; 
+  
+  /* 2. 增加一点延迟 (0.5s)，给字体文件一点点下载时间 */
+  /* 动画改为 0.8s，入场更丝滑 */
+  animation: elegantFadeIn 0.8s ease-out 0.5s both;
+  
+  /* 3. 性能优化：告诉浏览器这东西有动画，提前准备好显存 */
+  will-change: opacity, transform;
+}
+
+@keyframes elegantFadeIn {
   from { 
-    filter: blur(5px); 
-    opacity: 0;
-    transform: translateY(5px);
+    opacity: 0; 
+    filter: blur(5px); /* 保留一点点微弱的模糊，掩盖字体的边缘抖动 */
+    transform: translateY(5px); 
   }
   to { 
+    opacity: 1; 
     filter: blur(0); 
-    opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0); 
   }
+}
+
+/* 之前那个 heavyInkFade 保持不变，留给后面的章节标题用 */
+@keyframes heavyInkFade {
+  from { opacity: 0; filter: blur(5px); letter-spacing: 0.6em; }
+  to { opacity: 1; filter: blur(0); letter-spacing: 0.4em; }
 }
 
 /* 2. 优化选项按钮：悬停时轻微右移 */
